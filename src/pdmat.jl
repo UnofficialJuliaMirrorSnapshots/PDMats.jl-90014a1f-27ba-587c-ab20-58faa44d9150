@@ -23,6 +23,7 @@ PDMat(fac::CholType) = PDMat(Matrix(fac), fac)
 ### Conversion
 Base.convert(::Type{PDMat{T}},         a::PDMat) where {T<:Real} = PDMat(convert(AbstractArray{T}, a.mat))
 Base.convert(::Type{AbstractArray{T}}, a::PDMat) where {T<:Real} = convert(PDMat{T}, a)
+Base.convert(::Type{AbstractArray{T}}, a::PDMat{T}) where {T<:Real} = a
 
 ### Basics
 
@@ -49,7 +50,7 @@ Base.inv(a::PDMat) = PDMat(inv(a.chol))
 LinearAlgebra.logdet(a::PDMat) = logdet(a.chol)
 LinearAlgebra.eigmax(a::PDMat) = eigmax(a.mat)
 LinearAlgebra.eigmin(a::PDMat) = eigmin(a.mat)
-
+Base.kron(A::PDMat, B::PDMat) = PDMat(kron(A.mat, B.mat), Cholesky(kron(A.chol.U, B.chol.U), 'U', A.chol.info))
 
 ### whiten and unwhiten
 
